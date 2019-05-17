@@ -5,14 +5,23 @@
  * Date: 5/16/2019
  * Time: 8:41 PM
  */
-try{
-    $db=mysqli_connect("localhost","root","","fc");
-}
-catch (mysqli_sql_exception $exception){
-    $output = 'Unable to connect to the database server: ' . $e;
-    echo $output;
+$conn = mysqli_init();
 
+mysqli_real_connect($conn,"farm-corp.mysql.database.azure.com", "farm-corp@farm-corp", 'Digital007', 'farmcorp', 3306);  
+
+if (mysqli_connect_errno($conn)) {
+die('Failed to connect to MySQL: '.mysqli_connect_error());
 }
+//else{ echo "hello";}
+
+//try{
+   // $db=mysqli_connect("localhost","root","","fc");
+//}
+//catch (mysqli_sql_exception $exception){
+    //$output = 'Unable to connect to the database server: ' . $e;
+    //echo $output;
+
+//}
 
 function sanitize($var)
 {
@@ -37,7 +46,7 @@ if(isset($_REQUEST['send'])) {
     }
     else{
         $sql = "INSERT INTO `contact` (`name`,`mail`,`subject`,`message`) VALUES ('$name','$mail','$subject','$message')";
-        $sqlquerry = mysqli_query($db, $sql);
+        $sqlquerry = mysqli_query($conn, $sql);
         if($sqlquerry){
             echo "<span class='alert-success form-success'> message sent succesfully!</span>";
         }
@@ -52,7 +61,7 @@ if(isset($_REQUEST['send'])) {
 
 if (isset($_REQUEST['submit'])){
 
-    $mail = mysqli_real_escape_string($db, $_REQUEST['email']);
+    $mail = mysqli_real_escape_string($conn, $_REQUEST['email']);
     if(empty($mail)){
         echo "<span class='alert-danger form-error'> fill in your email!</span>";
     }
@@ -61,7 +70,7 @@ if (isset($_REQUEST['submit'])){
     }
     else{
         $sql="INSERT INTO `news` (`mail`) VALUES ('$mail')";
-        $sqlquerry=mysqli_query($db,$sql);
+        $sqlquerry=mysqli_query($conn,$sql);
         echo "<span class='form-success alert-success'> subscribed succesfully!</span>";
     }
 
